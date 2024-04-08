@@ -18,28 +18,34 @@ public class Main {
 
         while (true) {
 
-        String inputExpression = getLine(result);
+            String inputExpression = getLine(result).replaceAll(" ", "");
 
-        if (inputExpression.equals("q")) System.exit(0);
-        else if (inputExpression.equals("n")) {
-            result = 0;
-            continue;
+            if (inputExpression.equals("q")) System.exit(0);
+            else if (inputExpression.equals("n")) {
+                result = 0;
+                continue;
+            }
+
+            if (!checkInputString(inputExpression) || !checkBracketsMatching(inputExpression)) {
+                System.out.println("Invalid expression");
+                continue;
+            }
+
+            result = getResultExprassion(inputExpression);
+
+            System.out.print(result);
         }
 
-        if (!checkInputString(inputExpression) || !checkBracketsMatching(inputExpression)) {
-            System.out.println("Invalid expression");
-            continue;
-        }
+    }
 
+    static double getResultExprassion(String inputExpression) {
+        inputExpression = inputExpression.replaceAll(" ", "");
         inputExpression = replaceUnaryOperations(inputExpression);
+
         List<String> tokens = getTokensFromString(inputExpression);
         List<String> tokensRPN = RPN(tokens);
 
-        result = calculate(tokensRPN);
-
-        System.out.print(result);
-        }
-
+        return calculate(tokensRPN);
     }
 
     static String getLine(Double prewResult) {
@@ -50,10 +56,7 @@ public class Main {
         if (input.equals("q")) return input;
         else if (input.isEmpty()) return "n";
 
-        String inputExpression = (prewResult == 0 ? " " : prewResult.toString()) + input;
-        inputExpression = inputExpression.replaceAll(" ", "");
-
-        return inputExpression;
+        return (prewResult == 0 ? " " : prewResult.toString()) + input;
     }
 
     static String replaceUnaryOperations(String str) {
@@ -75,8 +78,8 @@ public class Main {
 
         for (char ch : str.toCharArray()) {
             if (ch == ')') {
-              if (chStack.empty()) return false;
-              else chStack.pop();
+                if (chStack.empty()) return false;
+                else chStack.pop();
             }
 
             if (ch == '(')
@@ -127,9 +130,9 @@ public class Main {
 
                 while (!tokensRPN.isEmpty() && !opStack.empty() &&
                         ((isCloseBracket && !topStackElement.equals("(")) ||
-                        (!isCloseBracket &&
-                        (currentPrecedence > 2 ? currentPrecedence < getPrecedence(topStackElement) :
-                                currentPrecedence <= getPrecedence(topStackElement))))) {
+                                (!isCloseBracket &&
+                                        (currentPrecedence > 2 ? currentPrecedence < getPrecedence(topStackElement) :
+                                                currentPrecedence <= getPrecedence(topStackElement))))) {
                     tokensRPN.add(opStack.pop());
                     topStackElement = opStack.isEmpty() ? "" : opStack.peek();
                 }
@@ -145,10 +148,6 @@ public class Main {
             tokensRPN.add(opStack.pop());
         }
 
-//        System.out.println("STACK");
-//        for (String el : tokensRPN) {
-//            System.out.println("el: " + el);
-//        }
         return tokensRPN;
     }
 
@@ -156,7 +155,7 @@ public class Main {
     static boolean isNumber(String str) {
         String regexPattern = "([0-9]*\\.?[0-9]+)";
 
-       return isMatch(str, regexPattern);
+        return isMatch(str, regexPattern);
     }
 
 
