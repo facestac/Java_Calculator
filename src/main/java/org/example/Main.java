@@ -9,38 +9,48 @@ import java.util.Stack;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
-
     public static void main(String[] args) {
+        System.out.println("Enter math expression to calculate");
+        System.out.println("Enter 'q' to exit");
+        System.out.println("Press 'Enter' to reset expression");
+
+        double result = 0;
 
         while (true) {
 
-        String inputExpression = getLine();
+        String inputExpression = getLine(result);
 
         if (inputExpression.equals("q")) System.exit(0);
+        else if (inputExpression.equals("n")) {
+            result = 0;
+            continue;
+        }
 
-        if (!checkInputString(inputExpression)) {
+        if (!checkInputString(inputExpression) || !checkBracketsMatching(inputExpression)) {
             System.out.println("Invalid expression");
             continue;
         }
 
         inputExpression = replaceUnaryOperations(inputExpression);
-
         List<String> tokens = getTokensFromString(inputExpression);
-
         List<String> tokensRPN = RPN(tokens);
 
-        System.out.println("RESULT: " + calculate(tokensRPN));
+        result = calculate(tokensRPN);
+
+        System.out.print(result);
         }
 
     }
 
-    static String getLine() {
+    static String getLine(Double prewResult) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Please enter math expression to calculate");
-        System.out.println("Enter 'q' to exit");
+        String input = sc.nextLine();
 
-        String inputExpression = sc.nextLine();
+        if (input.equals("q")) return input;
+        else if (input.isEmpty()) return "n";
+
+        String inputExpression = (prewResult == 0 ? " " : prewResult.toString()) + input;
         inputExpression = inputExpression.replaceAll(" ", "");
 
         return inputExpression;
@@ -60,9 +70,25 @@ public class Main {
         return changedStr;
     }
 
+    static boolean checkBracketsMatching(String str) {
+        Stack<Character> chStack = new Stack<>();
+
+        for (char ch : str.toCharArray()) {
+            if (ch == ')') {
+              if (chStack.empty()) return false;
+              else chStack.pop();
+            }
+
+            if (ch == '(')
+                chStack.push(ch);
+        }
+
+        return chStack.empty();
+    }
+
 
     static boolean checkInputString(String str) {
-        String regexPattern = "^(([+-]?[(]?)*(\\d*\\.?\\d+))[(]*([/*%^+-][(]*[+-]?(\\d*\\.?\\d+)+[)]*)*";
+        String regexPattern = "^(([+-]?[(]?)*(\\d*\\.?\\d+))[()]*([/*%^+-][(]*[+-]?(\\d*\\.?\\d+)[)]*)*";
 
         return isMatch(str, regexPattern);
     }
@@ -88,13 +114,8 @@ public class Main {
         List<String> tokensRPN = new ArrayList<>();
 
         Stack<String> opStack = new Stack<>();
-//        int i = 0;
-
-//        System.out.println("SIZE: " + tokens.size());
 
         for (String currentToken : tokens) {
-//            String currentToken = tokens.get(i);
-
             if (isNumber(currentToken)) {
                 tokensRPN.add(currentToken);
             } else if (currentToken.equals("(")) {
@@ -118,14 +139,7 @@ public class Main {
 
                 if (!isCloseBracket) opStack.push(currentToken);
             }
-
-//            i++;
         }
-
-//            if (i < tokens.size()) opStack.push(tokens.get(i));
-//            i++;
-
-
 
         while (!opStack.empty()) {
             tokensRPN.add(opStack.pop());
@@ -169,9 +183,6 @@ public class Main {
 
     static double calculate(List<String> tokensRPN) {
         Stack<Double> dblStack = new Stack<>();
-//        int i = 0;
-
-//        System.out.println("SIZE: " + tokens.size());
 
         for (String stringValue : tokensRPN) {
             double doubleValue = 0;
