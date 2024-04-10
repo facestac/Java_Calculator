@@ -31,14 +31,14 @@ public class Main {
                 continue;
             }
 
-            result = getResultExprassion(inputExpression);
+            result = getResultExpression(inputExpression);
 
             System.out.print(result);
         }
 
     }
 
-    static double getResultExprassion(String inputExpression) {
+    static double getResultExpression(String inputExpression) {
         inputExpression = inputExpression.replaceAll(" ", "");
         inputExpression = replaceUnaryOperations(inputExpression);
 
