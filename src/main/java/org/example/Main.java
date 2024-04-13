@@ -33,7 +33,7 @@ public class Main {
 
             result = getResultExprassion(inputExpression);
 
-            System.out.print(result);
+            System.out.print("> " + result);
         }
 
     }
