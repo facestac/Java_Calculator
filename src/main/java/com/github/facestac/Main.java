@@ -1,4 +1,4 @@
-package org.example;
+package com.github.facestac;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -52,7 +52,7 @@ public class Main {
      * @param inputExpression входная строка (арифметическое выражение).
      * @return итоговое вычисленное значение выражения.
      */
-    private static double getResultExpression(String inputExpression) {
+    public static double getResultExpression(String inputExpression) {
         inputExpression = inputExpression.replaceAll(" ", "");
         inputExpression = replaceUnaryOperations(inputExpression);
 
@@ -91,11 +91,11 @@ public class Main {
     private static String replaceUnaryOperations(String str) {
         String changedStr = str;
 
-        // Replace unary plus
+        // Убираем унарный плюс
         if (changedStr.charAt(0) == '+') changedStr = changedStr.replaceFirst("\\+", "");
         changedStr = changedStr.replaceAll("\\(\\+", "(");
 
-        // replace unary minus
+        // Заменяем унарный минус
         if (changedStr.charAt(0) == '-') changedStr = changedStr.replaceFirst("-", "~");
         changedStr = changedStr.replaceAll("\\(-", "(~");
 
@@ -109,7 +109,7 @@ public class Main {
      * @param str строка для проверки.
      * @return возвращаем результат проверки.
      */
-    private static boolean checkBracketsMatching(String str) {
+    public static boolean checkBracketsMatching(String str) {
         Stack<Character> chStack = new Stack<>();
 
         for (char ch : str.toCharArray()) {
@@ -132,7 +132,7 @@ public class Main {
      * @param str проверяемая строка.
      * @return результат функции поиска совпадений.
      */
-    private static boolean checkInputString(String str) {
+    public static boolean checkInputString(String str) {
         String regexPattern = "^(([+-]?[(]?)*(\\d*\\.?\\d+))[()]*([/*%^+-][(]*[+-]?(\\d*\\.?\\d+)[)]*)*";
 
         return isMatch(str, regexPattern);
